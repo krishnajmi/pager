@@ -50,17 +50,3 @@ func (c *NotificationController) SendNotification(ctx *gin.Context) {
 		"data":   notificationData,
 	})
 }
-
-func (c *NotificationController) GetCampaignSessions(ctx *gin.Context) {
-	sessionID := ctx.Param("id")
-
-	sessions, err := c.NotificationService.FetchNotificationSessions(ctx, sessionID)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"sessions": sessions,
-	})
-}

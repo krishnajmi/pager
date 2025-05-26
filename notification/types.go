@@ -27,12 +27,10 @@ type Notification struct {
 
 type NotificationService interface {
 	SendNotification(ctx context.Context) (*Notification, error)
-	FetchNotificationSessions(ctx context.Context, campaignID string) ([]NotificationSession, error)
 }
 
 type NotificationSessionService interface {
 	Create(ctx context.Context, session NotificationSession) (int64, error)
-	Update(ctx context.Context, session NotificationSession) error
 }
 
 type NotificationSession struct {

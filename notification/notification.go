@@ -69,7 +69,3 @@ func (c *Notification) SendNotification(ctx context.Context) (*Notification, err
 
 	return c, nil
 }
-
-func (c *Notification) FetchNotificationSessions(ctx context.Context, campaignID string) ([]NotificationSession, error) {
-	return nil, nil
-}

@@ -21,7 +21,6 @@ func (r *UserRepository) Create(ctx context.Context, username, password, userTyp
 		Password: password,
 		UserType: userType,
 		Name:     name,
-		EmailID:  email,
 	}
 	err := r.db.Create(&user).Error
 	return &user, err

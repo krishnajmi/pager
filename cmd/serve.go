@@ -28,15 +28,16 @@ var apiCmd = &cobra.Command{
 		servicePrefix := "/pager/v1"
 		templatePrefix := servicePrefix + "/template"
 		notificationPrefix := servicePrefix + "/notification"
-		loginPrefix := servicePrefix + "/login"
+		loginPrefix := servicePrefix + "/user"
 		middlewares := []gin.HandlerFunc{
 			server.AuthPermissionMiddleware(sql.PagerOrm),
-			//server.RecoveryMiddleware(),
+			server.RecoveryMiddleware(),
 		}
+		brokers := []string{"localhost:9092"} // Replace with your Kafka broker addresses
 		router := server.InitServer(middlewares, server.WithTimeOut(0*time.Second),
 			server.CreateRoutes(
 				server.TemplateRouterGroup(templatePrefix, sql.PagerOrm, middlewares...),
-				server.NotificationRouterGroup(notificationPrefix, middlewares...),
+				server.NotificationRouterGroup(notificationPrefix, brokers, middlewares...),
 				server.AuthRouterGroup(loginPrefix, sql.PagerOrm, middlewares...),
 			),
 		)

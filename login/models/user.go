@@ -18,7 +18,6 @@ type User struct {
 	Username  string    `json:"username" gorm:"column:username;size:255;not null;unique;index:idx_users_username"`
 	Password  string    `json:"password" gorm:"column:password;size:255;not null"`
 	Name      string    `json:"name" gorm:"column:name;size:255;not null"`
-	EmailID   string    `json:"email_id" gorm:"column:email_id;size:255;not null;unique;index:idx_users_email"`
 	UserType  string    `json:"user_type" gorm:"column:user_type;size:50;not null"` // Admin, User
 	CreatedAt time.Time `json:"created_at" gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"column:updated_at;autoUpdateTime"`

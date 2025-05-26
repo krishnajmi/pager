@@ -9,14 +9,9 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
-	comm_models "github.com/kp/pager/communicator/models"
 	"github.com/kp/pager/consumers"
 	aws_db "github.com/kp/pager/databases/aws"
 	"github.com/kp/pager/databases/kafka"
-	"github.com/kp/pager/databases/sql"
-	login_models "github.com/kp/pager/login/models"
-	notification_models "github.com/kp/pager/notification/models"
-	templates "github.com/kp/pager/templates"
 	"github.com/spf13/cobra"
 )
 
@@ -74,7 +69,7 @@ func setupDeps() {
 
 	// Initialize Kafka
 	brokers := strings.Split(appConfig.KafkaConfig.Brokers, ",")
-	err = kafka.RunMigrations(brokers)
+	err = kafka.RunMigrations(brokers) // Add this migration in CLI
 	if err != nil {
 		slog.Error("errorInitializingKafka",
 			slog.String("error", err.Error()),
@@ -82,10 +77,9 @@ func setupDeps() {
 		)
 		os.Exit(1)
 	}
-
 	// Start batch consumer
 	go consumers.StartBatchConsumer(brokers)
-	migrate()
+	dbMigrate()
 }
 
 func getAppConfig(ctx context.Context) *AppConfig {
@@ -129,19 +123,6 @@ func ReadAppConfig(envList []string, destination any, configs ...*aws.Config) er
 	}
 
 	return nil
-}
-
-func migrate() {
-	//notification system tables
-	sql.PagerOrm.AutoMigrate(&notification_models.NotificationSession{})
-	//template system tables
-	sql.PagerOrm.AutoMigrate(&templates.NotificationTemplate{})
-	//communication system tables
-	sql.PagerOrm.AutoMigrate(&comm_models.CommunicationLogs{})
-	// Auth system tables
-	sql.PagerOrm.AutoMigrate(&login_models.User{})
-	sql.PagerOrm.AutoMigrate(&login_models.Permission{})
-	sql.PagerOrm.AutoMigrate(&login_models.UserPermission{})
 }
 
 func IsEnvLocal() bool {

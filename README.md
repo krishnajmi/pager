@@ -3,7 +3,6 @@
 Pager is a **basic but scalable notification system architecture** that demonstrates core patterns for handling notifications efficiently. While not production-grade out of the box, it provides the foundational components for:
 
 - Batch processing notifications
-- Multi-channel delivery (Kafka, Email, SMS)
 - Basic retry mechanisms
 - Monitoring capabilities
 
@@ -23,33 +22,8 @@ The architecture is intentionally kept simple to serve as:
 | **Security** | End-to-end encryption, secure credential storage, and audit logging |
 
 ### 🧩 Pager Architecture
-```mermaid
-graph TD
-    A[API Server] --> B[Notification Session]
-    B --> C[Fetch Audience]
-    C --> D[Batch Processor\n(5 audience/batch)]
-    D --> E[Create Batch]
-    E --> F[Push Batch to Kafka]
-    F --> G[Kafka Consumer]
-    G --> H[Process Batch]
-    H --> I[Fetch Templates]
-    I --> J[Personalize Content]
-    J --> K[Notification Service\nProvider]
-    
-    style A fill:#f9f,stroke:#333
-    style B fill:#bbf,stroke:#333
-    style C fill:#6f9,stroke:#333
-    style D fill:#f96,stroke:#333
-    style E fill:#9cf,stroke:#333
-    style F fill:#ff9,stroke:#333
-    style G fill:#c9f,stroke:#333
-    style H fill:#f66,stroke:#333
-    
-    classDef component fill:#fff,stroke:#333,stroke-width:2px;
-    class A,B,C,D,E,F,G,H component;
-```
 
-The complete batch processing flow:
+The complete notification processing flow:
 1. **API Server** receives the notification request
 2. Creates a **Notification Session** to track the process
 3. **Fetches Audience** data (from request in this implementation)
@@ -65,12 +39,11 @@ The complete batch processing flow:
 Key Batch Processing Characteristics:
 - **Batch-First Approach**: Entire batches processed together
 - **Configurable Batch Size**: Default 5 audiences per batch
-- **Atomic Processing**: Batch succeeds or fails as a unit
 - **Kafka Integration**:
   - Producer pushes complete batches
   - Consumer processes one batch at a time
 - **Template Personalization**: Done at consumer level
-- **Pluggable Providers**: Support for Email/SMS/etc.
+- **Pluggable Providers**: Can add Support for multiple channels like Email/SMS/etc.
 
 ## 🛠️ Getting Started
 
@@ -92,10 +65,18 @@ vim .env  # Configure your settings
 # 3. Start kafka dependencies
 docker-compose -f kafka/kafka-compose.yml up -d
 
-# 3. Install & run
+# 4. Install & run
 go mod download
 source .env && go run main.go apis
+
+# migrate db separately
+./pager migrate
+
+# 4.2 Register User 
+go build
+./pager register -u username -p password
 ```
+
 
 ## 🧪 Testing the System
 ```bash
@@ -106,8 +87,22 @@ go test -v ./...
 go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out
 
+## API Documentation
+
+### Authentication
+1. First login to get an X-Auth-Token:
+```bash
+curl -X POST http://localhost:8080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","password":"testpass"}'
+```
+
+2. Use the returned X-Auth-Token for subsequent requests:
+
+
 
 ## 🚀 Deployment Options
+Orchestration and Docker deployment is coming soon
 
 ---
 ✨ **Happy Notifying!** ✨

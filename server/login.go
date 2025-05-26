@@ -28,9 +28,9 @@ func authRoutes(db *gorm.DB, prefix string) []Route {
 	authCtrl := login.NewAuthController(authService)
 
 	return []Route{
-		newRoute(http.MethodPost, "/register", authCtrl.Register, prefix),
-		newRoute(http.MethodPost, "/login", authCtrl.Login, prefix),
-		newRoute(http.MethodPost, "/permissions", authCtrl.AddPermission, prefix, login.PagerAdminAccess),
+		newRoute(http.MethodPost, "/login/", authCtrl.Login, prefix),
+		newRoute(http.MethodPost, "/register/", authCtrl.Register, prefix, login.PagerAdminAccess),
+		newRoute(http.MethodPost, "/permissions/", authCtrl.AddPermission, prefix, login.PagerAdminAccess),
 		newRoute(http.MethodGet, "/permissions/user/:user_id/", authCtrl.GetPermissions, prefix, login.PagerAdminAccess),
 		newRoute(http.MethodGet, "/permissions/", authCtrl.GetAllPermissions, prefix, login.PagerAdminAccess),
 		newRoute(http.MethodGet, "/users/:user_id/", authCtrl.GetUserDetails, prefix, login.PagerAdminAccess),

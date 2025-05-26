@@ -2,7 +2,6 @@ package login
 
 import (
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -35,14 +34,6 @@ func (c *AuthController) Register(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":       "Invalid user type",
 			"valid_types": []string{UserTypeAdmin, UserTypeMarketing, UserTypeNormal},
-		})
-		return
-	}
-
-	// Validate username ends with wealthy.in
-	if !strings.HasSuffix(req.Username, "@wealthy.in") {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": "Username must end with wealthy.in",
 		})
 		return
 	}

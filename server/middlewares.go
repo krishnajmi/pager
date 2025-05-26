@@ -3,6 +3,7 @@ package server
 import (
 	"log/slog"
 	"net/http"
+	"runtime/debug"
 	"strings"
 	"time"
 
@@ -74,6 +75,29 @@ func AuthPermissionMiddleware(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		// Only proceed to the API handler if all checks pass
+		c.Next()
+	}
+}
+
+// RecoveryMiddleware handles panics and recovers gracefully
+func RecoveryMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		defer func() {
+			if err := recover(); err != nil {
+				// Log the error and stack trace
+				logger := c.Value("logger").(*slog.Logger)
+				logger.Error("panic recovered",
+					slog.Any("error", err),
+					slog.String("stack", string(debug.Stack())),
+				)
+
+				// Return 500 error to client
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+					"error": "Internal server error",
+				})
+			}
+		}()
+
 		c.Next()
 	}
 }

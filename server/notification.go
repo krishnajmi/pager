@@ -5,28 +5,26 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kp/pager/databases/kafka"
+	login "github.com/kp/pager/login"
 	"github.com/kp/pager/notification"
 )
 
-func NotificationRouterGroup(servicePrefix string, middlewares ...gin.HandlerFunc) RouterGroup {
+func NotificationRouterGroup(servicePrefix string, brokers []string, middlewares ...gin.HandlerFunc) RouterGroup {
 	return RouterGroup{
 		Prefix:      servicePrefix,
-		Routes:      notificationRoutes(servicePrefix),
+		Routes:      notificationRoutes(servicePrefix, brokers),
 		Middlewares: middlewares}
 }
 
-func notificationRoutes(prefix string) []Route {
+func notificationRoutes(prefix string, brokers []string) []Route {
 	// Initialize controllers
 
-	brokers := []string{"localhost:9092"} // Replace with your Kafka broker addresses
 	kafkaProducer, err := kafka.NewKafkaProducer(brokers)
 	if err != nil {
-		// Handle the error appropriately
 		panic(err)
 	}
 	notificationCtrl := notification.NewNotificationController(kafkaProducer)
 	return []Route{
-		newRoute(http.MethodPost, "/trigger/", notificationCtrl.SendNotification, prefix),
-		newRoute(http.MethodGet, "/sessions/:id/", notificationCtrl.GetCampaignSessions, prefix),
+		newRoute(http.MethodPost, "/trigger/", notificationCtrl.SendNotification, prefix, login.PagerAdminAccess),
 	}
 }
