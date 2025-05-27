@@ -20,9 +20,11 @@ var registerCmd = &cobra.Command{
 
 		encryptedPass := common.Encryptbase64(password)
 
+		userType, _ := cmd.Flags().GetString("usertype")
 		user := &login_models.User{
 			Username: username,
 			Password: encryptedPass,
+			UserType: userType,
 		}
 
 		result := sql.PagerOrm.Create(user)
@@ -44,6 +46,7 @@ var registerCmd = &cobra.Command{
 func init() {
 	registerCmd.Flags().StringP("username", "u", "", "Username for the new account")
 	registerCmd.Flags().StringP("password", "p", "", "Password for the new account")
+	registerCmd.Flags().StringP("usertype", "t", "user", "User type (admin/user)")
 	registerCmd.MarkFlagRequired("username")
 	registerCmd.MarkFlagRequired("password")
 

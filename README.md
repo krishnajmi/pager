@@ -72,9 +72,9 @@ source .env && go run main.go apis
 # migrate db separately
 ./pager migrate
 
-# 4.2 Register User 
+# 4.2 Register User (make admin user for all permission)
 go build
-./pager register -u username -p password
+./pager register -u username -p password -t admin
 ```
 
 

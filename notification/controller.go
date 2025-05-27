@@ -34,7 +34,6 @@ func (c *NotificationController) SendNotification(ctx *gin.Context) {
 	notificationData, err := notificationService.SendNotification(ctx)
 	if err != nil {
 		slog.Error("sendNotificationView:unableToSendNotification",
-			slog.String("campaign_id", notificationRequest.ID),
 			slog.Any("error", err))
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error":  err.Error(),

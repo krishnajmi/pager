@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/hex"
+	"time"
 
 	batchprocessor "github.com/kp/pager/batch_processor"
 	"github.com/kp/pager/communicator"
@@ -67,5 +68,8 @@ func (c *Notification) SendNotification(ctx context.Context) (*Notification, err
 		return nil, err
 	}
 
+	c.ID = sessionID
+	c.CreatedAt = time.Now()
+	c.UpdatedAt = time.Now()
 	return c, nil
 }

@@ -7,22 +7,10 @@ const (
 )
 
 const (
-	PagerAdminAccess           = "PAGER.ADMIN"
-	PagerCampaignAccess        = "PAGER.CAMPAIGN"
-	PagerCampaignTriggerAccess = "PAGER.CAMPAIGN_TRIGGER"
-	PagerAudienceAccess        = "PAGER.AUDIENCE"
-	PagerAudienceEditAccess    = "PAGER.AUDIENCE_EDIT"
-	PagerWebhookAccess         = "PAGER.WEBHOOK"
-	PagerCommunicationAccess   = "PAGER.COMMUNICATION"
-	PagerDNAccess              = "PAGER.DN"
-	PagerGroupDNAccess         = "PAGER.GROUP_DN"
-	PagerInternalAccess        = "PAGER.INTERNAL"
-	PagerJourneyAccess         = "PAGER.JOURNEY"
-	PagerReportAccess          = "PAGER.REPORT"
-	PagerTemplateAccess        = "PAGER.TEMPLATE"
-	PagerTemplateEditAccess    = "PAGER.TEMPLATE_EDIT"
-	PagerTenantAccess          = "PAGER.TENANT"
-	PagerUserAccess            = "PAGER.USER"
+	PagerAdminAccess       = "PAGER.ADMIN"
+	PagerNotifcationAccess = "PAGER.NOTIFICATION"
+	PagerTemplateAccess    = "PAGER.CAMPAIGN_TRIGGER"
+	PagerAuthAccess        = "PAGER.AUDIENCE"
 )
 
 var (
@@ -31,19 +19,11 @@ var (
 	}
 
 	DefaultMarketingPermissions = []string{
-		PagerCampaignAccess,
-		PagerCampaignTriggerAccess,
-		PagerAudienceAccess,
-		PagerAudienceEditAccess,
+		PagerNotifcationAccess,
 		PagerTemplateAccess,
-		PagerReportAccess,
-		PagerCommunicationAccess,
-		PagerTemplateEditAccess,
 	}
 
 	DefaultUserPermissions = []string{
-		PagerCampaignAccess,
-		PagerAudienceAccess,
-		PagerReportAccess,
+		PagerNotifcationAccess,
 	}
 )

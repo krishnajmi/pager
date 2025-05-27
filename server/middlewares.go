@@ -45,7 +45,10 @@ func AuthPermissionMiddleware(db *gorm.DB) gin.HandlerFunc {
 		c.Set("permissions", claims.Permissions)
 
 		// Log username and API call
-		logger := c.Value("logger").(*slog.Logger)
+		logger, ok := c.Value("logger").(*slog.Logger)
+		if !ok {
+			logger = slog.Default()
+		}
 		logger.Info("API request",
 			slog.String("username", claims.Username),
 			slog.String("api", c.Request.URL.Path),
@@ -85,7 +88,10 @@ func RecoveryMiddleware() gin.HandlerFunc {
 		defer func() {
 			if err := recover(); err != nil {
 				// Log the error and stack trace
-				logger := c.Value("logger").(*slog.Logger)
+				logger, ok := c.Value("logger").(*slog.Logger)
+				if !ok {
+					logger = slog.Default()
+				}
 				logger.Error("panic recovered",
 					slog.Any("error", err),
 					slog.String("stack", string(debug.Stack())),

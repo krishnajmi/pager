@@ -16,7 +16,7 @@ type NotificationRequestType struct {
 }
 
 type Notification struct {
-	ID                         string                `json:"id"`
+	ID                         int64                 `json:"id"`
 	TemplateID                 int64                 `json:"template_id"`
 	Audiences                  []common.AudienceType `json:"audiences"`
 	CreatedAt                  time.Time             `json:"created_at"`
